@@ -14,11 +14,16 @@ public class Claw {
 	DoubleSolenoid grabby = new DoubleSolenoid(grabbyPortOne, grabbyPortTwo);
 
 	public void openClaw() {
-		forward();
+		grabby.set(DoubleSolenoid.Value.kForward);
 	}
 
 	public void closeClaw() {
-		reverse();
+		grabby.set(DoubleSolenoid.Value.kReverse);
+	}
+	
+
+	public void clawOff() {
+		grabby.set(DoubleSolenoid.Value.kOff);
 	}
 
 	//show the status of the claw on the smartdashboard
@@ -32,18 +37,6 @@ public class Claw {
 		else {
 			SmartDashboard.putString("Grabby Arm", "OFF");
 		}
-	}
-
-	public void forward() {
-		grabby.set(DoubleSolenoid.Value.kForward);
-	}
-
-	public void reverse() {
-		grabby.set(DoubleSolenoid.Value.kReverse);
-	}
-
-	public void off() {
-		grabby.set(DoubleSolenoid.Value.kOff);
 	}
 	/* Author --> Gokul Swaminathan */
 }
