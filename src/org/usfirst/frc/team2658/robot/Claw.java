@@ -8,26 +8,26 @@ public class Claw {
 
 	/* Author --> Gokul Swaminathan */
 	// port numbers
-	private final int grabbyPortOne = 0;
-	private final int grabbyPortTwo = 1;
+	private static final int grabbyPortOne = 0;
+	private static final int grabbyPortTwo = 1;
 
-	DoubleSolenoid grabby = new DoubleSolenoid(grabbyPortOne, grabbyPortTwo);
+	private static DoubleSolenoid grabby = new DoubleSolenoid(grabbyPortOne, grabbyPortTwo);
 
-	public void openClaw() {
+	static public void openClaw() {
 		grabby.set(DoubleSolenoid.Value.kForward);
 	}
 
-	public void closeClaw() {
+	static public void closeClaw() {
 		grabby.set(DoubleSolenoid.Value.kReverse);
 	}
 	
 
-	public void clawOff() {
+	static public void clawOff() {
 		grabby.set(DoubleSolenoid.Value.kOff);
 	}
 
 	//show the status of the claw on the smartdashboard
-	public void clawStatus() {
+	static public void clawStatus() {
 		if (grabby.get() == DoubleSolenoid.Value.kForward) {
 			SmartDashboard.putString("Grabby Arm", "OPEN");
 		}

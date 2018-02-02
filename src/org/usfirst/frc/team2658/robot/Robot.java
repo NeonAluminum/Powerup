@@ -164,6 +164,12 @@ public class Robot extends IterativeRobot {
 	/* Author --> Gokul Swaminathan */
 	public void DriveTankDrive(Joystick inputR, Joystick inputL,  double exp, double cons, DifferentialDrive drive, int leftStick, int rightStick )
 	{
+		
+		//exp = sensitivity
+		//cons = power
+		//leftstick = left axis
+		//rightstick = right axis
+		
 		int negR = 0, negL = 0;
 		
 		if(inputR.getRawAxis(rightStick) < 0)
