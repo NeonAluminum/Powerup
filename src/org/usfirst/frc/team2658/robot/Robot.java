@@ -20,13 +20,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends IterativeRobot {
 	/* Author --> Gokul Swaminathan */
-	final int FRONT_LEFT_PORT = 0;   				//port number for front left motor
-	final int BACK_LEFT_PORT = 1;					//port number for back left motor
-	final int FRONT_RIGHT_PORT = 3;					//port number for front right motor
-	final int BACK_RIGHT_PORT = 4;					//port number for back right motor
-	final int XBOX_PORT = 0;						//xbox remote port
-	final int JOY1_PORT = 1;						//joystick 1 port
-	final int JOY2_PORT = 2;						//joystick 2 port
+	final int FRONT_LEFT_PORT = 0;   					//port number for front left motor
+	final int BACK_LEFT_PORT = 1;						    //port number for back left motor
+	final int FRONT_RIGHT_PORT = 3;					    //port number for front right motor
+	final int BACK_RIGHT_PORT = 4;					    //port number for back right motor
+	final int XBOX_PORT = 0;								    //xbox remote port
+	final int JOY1_PORT = 1;									//joystick 1 port
+	final int JOY2_PORT = 2;									//joystick 2 port
 	
 	final int CHOOSE_XBOX = 0, CHOOSE_DUAL = 1;		//chooser id's
 	
