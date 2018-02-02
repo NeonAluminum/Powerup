@@ -4,7 +4,7 @@
 
 Source code for running Team 2658's robot.
 
-### Contributing
+### Setting Up Git on Eclipse
 1. Download EGit for Eclipse [here](http://marketplace.eclipse.org/content/egit-git-team-provider).
 2. Restart Eclipse and go to Window --> Show View --> Other...
 3. Go under the Git folder and click `Git Repositories`.
@@ -15,5 +15,7 @@ Source code for running Team 2658's robot.
 8. Under connection, click on protocol box and click `https`
 9. Put in your GitHub username and password in the authentication box.
 10. Click on next until you click finish. On one of the windows, there will be an option to pick a destination folder. Select one.
-11. Import the project from that directory.
-12. Right click on the project folder in package explorer --> Team --> this is where you can find all the git actions.
+
+### Contributing
+1. Go to File --> Import --> General --> `Existing Projects into Workspace`. Now you can edit the code!
+2. If you right click on the project folder, you can find all your Git commands.
