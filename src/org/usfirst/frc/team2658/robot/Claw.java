@@ -26,11 +26,9 @@ public class Claw {
 		if (grabby.get() == DoubleSolenoid.Value.kForward) {
 			SmartDashboard.putString("Grabby Arm", "OPEN");
 		}
-
 		else if (grabby.get() == DoubleSolenoid.Value.kReverse) {
 			SmartDashboard.putString("Grabby Arm", "CLOSE");
 		}
-
 		else {
 			SmartDashboard.putString("Grabby Arm", "OFF");
 		}
