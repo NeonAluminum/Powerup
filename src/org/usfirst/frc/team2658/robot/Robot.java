@@ -41,7 +41,7 @@ public class Robot extends IterativeRobot {
 	SpeedControllerGroup spRight = new SpeedControllerGroup(fRight, bRight);
 
 	//drivetrain
-	DifferentialDrive driveTrain = new DifferentialDrive(spLeft, spRight);
+	static DifferentialDrive driveTrain;// = new DifferentialDrive(spLeft, spRight);
 	
 	//controllers
 	Joystick xbox = new Joystick(XBOX_PORT);
@@ -63,7 +63,7 @@ public class Robot extends IterativeRobot {
 	Encoder rEncoder, lEncoder;
 	static int encoderAvg;
 	char switchSide, scaleSide;
-	double distanceTraveled;
+	static double distanceTraveled;
 	/* Author --> Neal Chokshi */
 
 	/**
@@ -73,6 +73,8 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		/* Author --> Gokul Swaminathan */
+		driveTrain = new DifferentialDrive(spLeft, spRight);
+		
 		chooser.addDefault("Xbox Controller (Tank Drive)", CHOOSE_XBOX);
 		chooser.addObject("Dual Joysticks", CHOOSE_DUAL);
 		SmartDashboard.putData("Drive choices", chooser);
@@ -112,8 +114,13 @@ public class Robot extends IterativeRobot {
 	public void autonomousPeriodic() {
 		/* Author --> Neal Chokshi */
 		encoderAvg = (rEncoder.get() + lEncoder.get())/2;
-		rEncoder.
-		//distanceTraveled = encDist*encoderAvg;
+		distanceTraveled = AutonomousChoices.ENCODER_PER_FEET*encoderAvg;
+		
+		
+		
+		
+		
+		
 		/* Author --> Neal Chokshi */
 	}
 
@@ -163,7 +170,7 @@ public class Robot extends IterativeRobot {
 	}
 	
 	/* Author --> Gokul Swaminathan */
-	public void DriveTankDrive(Joystick inputR, Joystick inputL,  double exp, double cons, DifferentialDrive drive, int leftStick, int rightStick )
+	public static void DriveTankDrive(Joystick inputR, Joystick inputL,  double exp, double cons, DifferentialDrive drive, int leftStick, int rightStick )
 	{
 		int negR = 0, negL = 0;
 		
