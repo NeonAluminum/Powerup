@@ -61,9 +61,9 @@ public class Robot extends IterativeRobot {
 	String fmsMessage;
 	
 	Encoder rEncoder, lEncoder;
-	int encoderAvg;
+	static int encoderAvg;
 	char switchSide, scaleSide;
-	double encDist, distanceTraveled;
+	double distanceTraveled;
 	/* Author --> Neal Chokshi */
 
 	/**
@@ -100,7 +100,7 @@ public class Robot extends IterativeRobot {
 		switchSide = fmsMessage.charAt(0);
 		scaleSide = fmsMessage.charAt(1);
 		distanceTraveled = 0;
-		encDist = Math.PI * 6;
+		
 		/* Author --> Neal Chokshi */
 		
 	}
@@ -112,7 +112,8 @@ public class Robot extends IterativeRobot {
 	public void autonomousPeriodic() {
 		/* Author --> Neal Chokshi */
 		encoderAvg = (rEncoder.get() + lEncoder.get())/2;
-		distanceTraveled = encDist*encoderAvg;
+		rEncoder.
+		//distanceTraveled = encDist*encoderAvg;
 		/* Author --> Neal Chokshi */
 	}
 
