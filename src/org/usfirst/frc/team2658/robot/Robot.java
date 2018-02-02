@@ -185,8 +185,8 @@ public class Robot extends IterativeRobot {
 		
 		
 		
-		double leftSpeed = - negR * cons * Math.pow(Math.abs(inputR.getRawAxis(5)), exp);
-		double rightSpeed = - negL *  cons * Math.pow(Math.abs(inputL.getRawAxis(1)), exp);
+		double leftSpeed = - negR * cons * Math.pow(Math.abs(inputR.getRawAxis(rightStick)), exp);
+		double rightSpeed = - negL *  cons * Math.pow(Math.abs(inputL.getRawAxis(leftStick)), exp);
 		
 		drive.tankDrive(leftSpeed, rightSpeed);
 	}
