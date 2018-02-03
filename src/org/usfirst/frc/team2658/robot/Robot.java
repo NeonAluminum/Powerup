@@ -60,7 +60,7 @@ public class Robot extends IterativeRobot {
 	DriverStation driverStation;
 	String fmsMessage;
 	
-	Encoder rEncoder, lEncoder;
+	static Encoder rEncoder, lEncoder;
 	static int encoderAvg;
 	char switchSide, scaleSide;
 	static double distanceTraveled;
@@ -122,7 +122,7 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {
 		/* Author --> Neal Chokshi */
 		//init vars
-		fmsMessage = driverStation.getGameSpecificMessage();
+		fmsMessage = driverStation.getGameSpecificMessage().toLowerCase();
 		switchSide = fmsMessage.charAt(0);
 		scaleSide = fmsMessage.charAt(1);
 		distanceTraveled = 0;
@@ -131,6 +131,7 @@ public class Robot extends IterativeRobot {
 		autoChooser.addDefault("RIGHT SIDE", RIGHT_POS);
 		autoChooser.addObject("MID POSITION", MID_POS);
 		autoChooser.addObject("LEFT SIDE", LEFT_POS);
+
 
 		/* Author --> Neal Chokshi */
 		
@@ -143,7 +144,34 @@ public class Robot extends IterativeRobot {
 	public void autonomousPeriodic() {
 		/* Author --> Neal Chokshi */
 		encoderAvg = (rEncoder.get() + lEncoder.get())/2;
-		distanceTraveled = encDist*encoderAvg;
+		distanceTraveled = encDist*Math.abs(encoderAvg);
+		int robotPosition = autoChooser.getSelected();
+
+		if(robotPosition == 0){ //right position
+			if(scaleSide == 'r'){
+				AutonomousOptions.straight();
+			}
+			else if(scaleSide == 'l'){
+				AutonomousOptions.straightDiagL();
+			}
+
+		}
+		else if (robotPosition == 2){ // left position
+			if(scaleSide == 'l'){
+				AutonomousOptions.straight();
+			}
+			else if(scaleSide == 'r'){
+				AutonomousOptions.straightDiagR();
+			}
+		}
+		else if (robotPosition == 1){
+			AutonomousOptions.nintendoSwitch(switchSide);
+		}
+
+
+
+
+
 		/* Author --> Neal Chokshi */
 	}
 
