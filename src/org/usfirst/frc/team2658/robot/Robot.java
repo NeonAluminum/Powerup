@@ -20,37 +20,36 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends IterativeRobot {
 	/* Author --> Gokul Swaminathan */
-	final int FRONT_LEFT_PORT = 0;   					//port number for front left motor
-	final int BACK_LEFT_PORT = 1;						    //port number for back left motor
-	final int FRONT_RIGHT_PORT = 3;					    //port number for front right motor
-	final int BACK_RIGHT_PORT = 4;					    //port number for back right motor
-	final int XBOX_PORT = 0;								    //xbox remote port
-	final int JOY1_PORT = 1;									//joystick 1 port
-	final int JOY2_PORT = 2;									//joystick 2 port
-	
-	final int CHOOSE_XBOX = 0, CHOOSE_DUAL = 1;		//chooser id's
-	
-	//motors
-	Talon fLeft = new Talon(FRONT_LEFT_PORT);
-	Talon fRight = new Talon(FRONT_RIGHT_PORT);
-	Talon bLeft = new Talon(BACK_LEFT_PORT);
-	Talon bRight = new Talon(BACK_RIGHT_PORT);
-	
-	//groups of motors
-	SpeedControllerGroup spLeft = new SpeedControllerGroup(fLeft, bLeft); 
-	SpeedControllerGroup spRight = new SpeedControllerGroup(fRight, bRight);
-
-	//drivetrain
-	DifferentialDrive driveTrain = new DifferentialDrive(spLeft, spRight);
-	
-	//controllers
-	Joystick xbox = new Joystick(XBOX_PORT);
-	Joystick joyLeft = new Joystick(JOY1_PORT);
-	Joystick joyRight = new Joystick(JOY2_PORT);
+	final int FRONT_LEFT_PORT = 0;   								//port number for front left motor
+	final int BACK_LEFT_PORT = 1;						   				//port number for back left motor
+	final int FRONT_RIGHT_PORT = 3;					    			//port number for front right motor
+	final int BACK_RIGHT_PORT = 4;					   			    //port number for back right motor
+	final int XBOX_PORT = 0;								    			//xbox remote port
+	final int JOY1_PORT = 1;									            //joystick 1 port
+	final int JOY2_PORT = 2;									            //joystick 2 port
+	final int CHOOSE_XBOX = 0, CHOOSE_DUAL = 1;		    //chooser id's
 	
 	//strings for chooser
-	String power = "Drive Power";
-	String sensitivity = "Sensitivity";
+    final String power = "Drive Power";
+    final String sensitivity = "Sensitivity";
+		
+	//motors
+	Talon fLeft;
+	Talon fRight;
+	Talon bLeft;
+	Talon bRight;
+	
+	//groups of motors
+	SpeedControllerGroup spLeft;
+	SpeedControllerGroup spRight;
+
+	//drivetrain
+	DifferentialDrive driveTrain;
+	
+	//controllers
+	Joystick xbox;
+	Joystick joyLeft;
+	Joystick joyRight;
 	/* Author --> Gokul Swaminathan */
 	
 	SendableChooser<Integer> chooser = new SendableChooser<>();
@@ -78,6 +77,24 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putData("Drive choices", chooser);
 		SmartDashboard.putNumber(power, 1);
 		SmartDashboard.putNumber(sensitivity, 2);
+		
+		//initialize all motors
+		fLeft = new Talon(FRONT_LEFT_PORT);
+		fRight = new Talon(FRONT_RIGHT_PORT);
+		bLeft = new Talon(BACK_LEFT_PORT);
+		bRight = new Talon(BACK_RIGHT_PORT);
+		
+		//initialize speed controller groups
+		spLeft = new SpeedControllerGroup(fLeft, bLeft); 
+		spRight = new SpeedControllerGroup(fRight, bRight);
+		
+		//initialize drivetrain
+		driveTrain = new DifferentialDrive(spLeft, spRight);
+		
+		//intialize all controllers
+		xbox = new Joystick(XBOX_PORT);
+		joyLeft = new Joystick(JOY1_PORT);
+		joyRight = new Joystick(JOY2_PORT);
 		/* Author --> Gokul Swaminathan */
 	}
 
@@ -127,11 +144,10 @@ public class Robot extends IterativeRobot {
 		double exponent = SmartDashboard.getNumber(sensitivity, 2);
 		double constant = SmartDashboard.getNumber(power, 1);
 		
+		//controller axis
 		final int xboxRightAxis = 5;
-		final int xboxLeftAxis = 1;
-		
-		final int joyRightAxis = 1;
-		final int joyLeftAxis = 1;
+		final int xboxLeftAxis = 1;	
+		final int joystickAxis = 1;
 		
 		int mode = chooser.getSelected();
 		
@@ -139,12 +155,12 @@ public class Robot extends IterativeRobot {
 		{
 		case CHOOSE_XBOX: 
 			//run tank drive method for xbox
-			DriveTankDrive(xbox, xbox, exponent, constant, driveTrain, xboxLeftAxis, xboxRightAxis);
+			DriveTankDrive(xbox.getRawAxis(xboxLeftAxis), xbox.getRawAxis(xboxRightAxis) ,exponent, constant, driveTrain);
 			break;
 			
 		case CHOOSE_DUAL:
 			//run tank drive method for joysticks
-			DriveTankDrive(joyRight, joyLeft, exponent, constant, driveTrain, joyLeftAxis, joyRightAxis);
+			DriveTankDrive(joyLeft.getRawAxis(joystickAxis), joyRight.getRawAxis(joystickAxis), exponent, constant, driveTrain);
 			break;
 			
 		default:
@@ -162,36 +178,33 @@ public class Robot extends IterativeRobot {
 	}
 	
 	/* Author --> Gokul Swaminathan */
-	public void DriveTankDrive(Joystick inputR, Joystick inputL,  double exp, double cons, DifferentialDrive drive, int leftStick, int rightStick )
+	public void DriveTankDrive(double leftAxis, double rightAxis, double exp, double cons, DifferentialDrive drive )
 	{
 		
 		//exp = sensitivity
 		//cons = power
-		//leftstick = left axis
-		//rightstick = right axis
 		
 		int negR = 0, negL = 0;
 		
-		if(inputR.getRawAxis(rightStick) < 0)
+		if(rightAxis < 0)
 		{
 			negR = -1;			
 		}
-		else if(inputR.getRawAxis(rightStick) > 0)
+		else if(rightAxis > 0)
 		{
 			negR = 1;
 		}
-		if(inputL.getRawAxis(leftStick) < 0)
+		if(leftAxis < 0)
 		{
 			negL = -1;
 		}
-		else if(inputL.getRawAxis(leftStick) > 0)
+		else if(leftAxis > 0)
 		{
 			negL = 1;
 		}
-		
-		
-		double leftSpeed = - negR * cons * Math.pow(Math.abs(inputR.getRawAxis(rightStick)), exp);
-		double rightSpeed = - negL *  cons * Math.pow(Math.abs(inputL.getRawAxis(leftStick)), exp);
+				
+		double leftSpeed = - negR * cons * Math.pow(Math.abs(rightAxis), exp);
+		double rightSpeed = - negL *  cons * Math.pow(Math.abs(leftAxis), exp);
 		
 		drive.tankDrive(leftSpeed, rightSpeed);
 	}
