@@ -28,6 +28,8 @@ cmake-build-release/
 
 ## File-based project format:
 *.iws
+*.iml
+*.ipr
 
 ## Plugin-specific files:
 
@@ -50,4 +52,4 @@ crashlytics-build.properties
 fabric.properties
 
 
-*.iml
+
