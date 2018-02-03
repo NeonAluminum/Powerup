@@ -2,6 +2,7 @@ package org.usfirst.frc.team2658.robot;
 
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -24,11 +25,12 @@ public class Robot extends IterativeRobot {
 	final int JOY2_PORT = 2;									            //joystick 2 port
 	final int CHOOSE_XBOX = 0, CHOOSE_DUAL = 1;		    //chooser id's
 	final double encDist = (Math.PI * 6)/12; //  How many feet is one encoder unit;
-	final int SIDE_POS = 0, MID_POS = 1; // autonomous chooser id's
+	final int RIGHT_POS = 0, LEFT_POS = 1, MID_POS = 2; // autonomous chooser id's
+	final int GYRO_PORT = 0;
 	//strings for chooser
     final String power = "Drive Power";
     final String sensitivity = "Sensitivity";
-		
+
 	//motors
 	Talon fLeft;
 	Talon fRight;
@@ -51,12 +53,15 @@ public class Robot extends IterativeRobot {
 	SendableChooser<Integer> controllerChooser = new SendableChooser<>();
 	
 	/* Author --> Neal Chokshi */
+
+	static AnalogGyro gyro;
+
 	// Autonomous Variables
 	DriverStation driverStation;
 	String fmsMessage;
 	
 	Encoder rEncoder, lEncoder;
-	int encoderAvg;
+	static int encoderAvg;
 	char switchSide, scaleSide;
 	static double distanceTraveled;
 
@@ -95,6 +100,11 @@ public class Robot extends IterativeRobot {
 		joyLeft = new Joystick(JOY1_PORT);
 		joyRight = new Joystick(JOY2_PORT);
 		/* Author --> Gokul Swaminathan */
+
+		gyro = new AnalogGyro(GYRO_PORT);
+
+
+
 	}
 
 	/**
@@ -118,8 +128,9 @@ public class Robot extends IterativeRobot {
 		distanceTraveled = 0;
 
 
-		autoChooser.addDefault("SIDE POSITION", SIDE_POS);
+		autoChooser.addDefault("RIGHT SIDE", RIGHT_POS);
 		autoChooser.addObject("MID POSITION", MID_POS);
+		autoChooser.addObject("LEFT SIDE", LEFT_POS);
 
 		/* Author --> Neal Chokshi */
 		
