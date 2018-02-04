@@ -1,5 +1,6 @@
 package org.usfirst.frc.team2658.robot;
 
+/* AUTHOR: Neal Chokshi */
 import edu.wpi.first.wpilibj.Timer;
 //TODO: Implement Timers(?), Implement Autonomous Methods, Calaculate distances for autonomous
 public class AutonomousOptions {
@@ -7,20 +8,31 @@ public class AutonomousOptions {
 
     private static void moveForward(double distance, double power){
         double drivePower = 0;
+
+        // while not there yet...
         while(Robot.distanceTraveled < distance){
+            // decrement drive power until it is there to slow down to a stop
             drivePower = power * ((distance - Robot.distanceTraveled)/distance);
+            // drive there yay
             Robot.driveTrain.arcadeDrive(power, 0);
 
         }
+        // reset encoder related values
         Robot.distanceTraveled = 0;
         resetEncoders();
     }
+
     //  negative angle to turn left, positive to turn right. Speed to turn at, tolerance of turn (how off can it be)
     private static void turn(double angle, double power, int tolerance){
+        // make turn power positive or negative based on which we to turn
         double turnPower = power * (angle > 0 ? 1:-1);
+        // target angle is where robot is now plus angle param. this is to bypass using the
+        // janky gyro.reset() method
         double targetAngle = Robot.gyro.getAngle() + angle;
 
+        // while the target angle is not close enough...
         while(Math.abs(targetAngle - Robot.gyro.getAngle()) > tolerance){
+            // turn
             Robot.driveTrain.arcadeDrive(0, turnPower);
         }
 
@@ -53,5 +65,5 @@ public class AutonomousOptions {
             // go to switch(left)
         }
     }
-
+    /* AUTHOR: Neal Chokshi */
 }

@@ -58,14 +58,15 @@ public class Robot extends IterativeRobot {
 
 	// Autonomous Variables
 	DriverStation driverStation;
+	// game data message telling us what sides are ours
 	String fmsMessage;
-	
-	static Encoder rEncoder, lEncoder;
-	static int encoderAvg;
-	char switchSide, scaleSide;
-	static double distanceTraveled;
 
-	SendableChooser<Integer> autoChooser = new SendableChooser<>();
+	static Encoder rEncoder, lEncoder; // encoders for distance
+	static int encoderAvg; // average encoder values
+	char switchSide, scaleSide; // tracker vars
+	static double distanceTraveled; // how far the robot has traveled
+
+	SendableChooser<Integer> autoChooser = new SendableChooser<>(); // choose where robot is on the field
 
 	/* Author --> Neal Chokshi */
 
@@ -101,6 +102,7 @@ public class Robot extends IterativeRobot {
 		joyRight = new Joystick(JOY2_PORT);
 		/* Author --> Gokul Swaminathan */
 
+		// gyroscope init
 		gyro = new AnalogGyro(GYRO_PORT);
 
 
@@ -127,7 +129,7 @@ public class Robot extends IterativeRobot {
 		scaleSide = fmsMessage.charAt(1);
 		distanceTraveled = 0;
 
-
+		// side options
 		autoChooser.addDefault("RIGHT SIDE", RIGHT_POS);
 		autoChooser.addObject("MID POSITION", MID_POS);
 		autoChooser.addObject("LEFT SIDE", LEFT_POS);
@@ -145,7 +147,10 @@ public class Robot extends IterativeRobot {
 		/* Author --> Neal Chokshi */
 		encoderAvg = (rEncoder.get() + lEncoder.get())/2;
 		distanceTraveled = encDist*Math.abs(encoderAvg);
+
+		// get chosen pos from sendable chooser
 		int robotPosition = autoChooser.getSelected();
+
 
 		if(robotPosition == 0){ //right position
 			if(scaleSide == 'r'){
