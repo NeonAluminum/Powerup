@@ -1,7 +1,7 @@
 package org.usfirst.frc.team2658.robot;
 
 import edu.wpi.first.wpilibj.Timer;
-//TODO: Implement Timers(?) Implement Autonomous Methods
+//TODO: Implement Timers(?), Implement Autonomous Methods, Calaculate distances for autonomous
 public class AutonomousOptions {
     Timer timer = new Timer();
 
@@ -32,23 +32,25 @@ public class AutonomousOptions {
     }
 
     public static void straightDiagL(){
-
+            // go straight, turn towards scale (left), go to scale
     }
     public static void straightDiagR(){
-
+            // go straight, turn towards scale (right), go to scale
     }
     public static void straight(){
-
+            // go straight to scale (side-independent)
     }
     public static void crossLine(){
-
+            // basic cross auto line
     }
     public static void nintendoSwitch(char joycon){
         if(joycon == 'r'){
-            // go to switch
+            // turn towards switch,
+            // go to switch (right)
         }
         else if (joycon == 'l'){
-            // go to switch
+            // turn towards switch,
+            // go to switch(left)
         }
     }
 
