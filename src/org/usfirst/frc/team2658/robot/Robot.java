@@ -1,12 +1,8 @@
 package org.usfirst.frc.team2658.robot;
 
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
-import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -17,7 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * creating this project, you must also update the manifest file in the resource
  * directory.
  */
-
+// test push for Eclipse from intelliJ
 public class Robot extends IterativeRobot {
 	/* Author --> Gokul Swaminathan */
 	final int FRONT_LEFT_PORT = 0;   								//port number for front left motor
@@ -28,11 +24,13 @@ public class Robot extends IterativeRobot {
 	final int JOY1_PORT = 1;									            //joystick 1 port
 	final int JOY2_PORT = 2;									            //joystick 2 port
 	final int CHOOSE_XBOX = 0, CHOOSE_DUAL = 1;		    //chooser id's
-	
+	final double encDist = (Math.PI * 6)/12; //  How many feet is one encoder unit;
+	final int RIGHT_POS = 0, LEFT_POS = 1, MID_POS = 2; // autonomous chooser id's
+	final int GYRO_PORT = 0;
 	//strings for chooser
     final String power = "Drive Power";
     final String sensitivity = "Sensitivity";
-		
+
 	//motors
 	Talon fLeft;
 	Talon fRight;
@@ -44,7 +42,7 @@ public class Robot extends IterativeRobot {
 	SpeedControllerGroup spRight;
 
 	//drivetrain
-	DifferentialDrive driveTrain;
+	static DifferentialDrive driveTrain;
 	
 	//controllers
 	Joystick xbox;
@@ -52,17 +50,23 @@ public class Robot extends IterativeRobot {
 	Joystick joyRight;
 	/* Author --> Gokul Swaminathan */
 	
-	SendableChooser<Integer> chooser = new SendableChooser<>();
+	SendableChooser<Integer> controllerChooser = new SendableChooser<>();
 	
 	/* Author --> Neal Chokshi */
+
+	static AnalogGyro gyro;
+
 	// Autonomous Variables
 	DriverStation driverStation;
 	String fmsMessage;
 	
-	Encoder rEncoder, lEncoder;
-	int encoderAvg;
+	static Encoder rEncoder, lEncoder;
+	static int encoderAvg;
 	char switchSide, scaleSide;
-	double encDist, distanceTraveled;
+	static double distanceTraveled;
+
+	SendableChooser<Integer> autoChooser = new SendableChooser<>();
+
 	/* Author --> Neal Chokshi */
 
 	/**
@@ -72,9 +76,9 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		/* Author --> Gokul Swaminathan */
-		chooser.addDefault("Xbox Controller (Tank Drive)", CHOOSE_XBOX);
-		chooser.addObject("Dual Joysticks", CHOOSE_DUAL);
-		SmartDashboard.putData("Drive choices", chooser);
+		controllerChooser.addDefault("Xbox Controller (Tank Drive)", CHOOSE_XBOX);
+		controllerChooser.addObject("Dual Joysticks", CHOOSE_DUAL);
+		SmartDashboard.putData("Drive choices", controllerChooser);
 		SmartDashboard.putNumber(power, 1);
 		SmartDashboard.putNumber(sensitivity, 2);
 		
@@ -96,6 +100,11 @@ public class Robot extends IterativeRobot {
 		joyLeft = new Joystick(JOY1_PORT);
 		joyRight = new Joystick(JOY2_PORT);
 		/* Author --> Gokul Swaminathan */
+
+		gyro = new AnalogGyro(GYRO_PORT);
+
+
+
 	}
 
 	/**
@@ -113,11 +122,17 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {
 		/* Author --> Neal Chokshi */
 		//init vars
-		fmsMessage = driverStation.getGameSpecificMessage();
+		fmsMessage = driverStation.getGameSpecificMessage().toLowerCase();
 		switchSide = fmsMessage.charAt(0);
 		scaleSide = fmsMessage.charAt(1);
 		distanceTraveled = 0;
-		encDist = Math.PI * 6;
+
+
+		autoChooser.addDefault("RIGHT SIDE", RIGHT_POS);
+		autoChooser.addObject("MID POSITION", MID_POS);
+		autoChooser.addObject("LEFT SIDE", LEFT_POS);
+
+
 		/* Author --> Neal Chokshi */
 		
 	}
@@ -129,7 +144,34 @@ public class Robot extends IterativeRobot {
 	public void autonomousPeriodic() {
 		/* Author --> Neal Chokshi */
 		encoderAvg = (rEncoder.get() + lEncoder.get())/2;
-		distanceTraveled = encDist*encoderAvg;
+		distanceTraveled = encDist*Math.abs(encoderAvg);
+		int robotPosition = autoChooser.getSelected();
+
+		if(robotPosition == 0){ //right position
+			if(scaleSide == 'r'){
+				AutonomousOptions.straight();
+			}
+			else if(scaleSide == 'l'){
+				AutonomousOptions.straightDiagL();
+			}
+
+		}
+		else if (robotPosition == 2){ // left position
+			if(scaleSide == 'l'){
+				AutonomousOptions.straight();
+			}
+			else if(scaleSide == 'r'){
+				AutonomousOptions.straightDiagR();
+			}
+		}
+		else if (robotPosition == 1){
+			AutonomousOptions.nintendoSwitch(switchSide);
+		}
+
+
+
+
+
 		/* Author --> Neal Chokshi */
 	}
 
@@ -143,13 +185,13 @@ public class Robot extends IterativeRobot {
 		//get inputs from user
 		double exponent = SmartDashboard.getNumber(sensitivity, 2);
 		double constant = SmartDashboard.getNumber(power, 1);
-		
+
 		//controller axis
 		final int xboxRightAxis = 5;
 		final int xboxLeftAxis = 1;	
 		final int joystickAxis = 1;
 		
-		int mode = chooser.getSelected();
+		int mode = controllerChooser.getSelected();
 		
 		switch(mode)
 		{
